@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
 
 class UserViewModel {
+
     user = null;
     isAuthenticated = false;
 
@@ -9,10 +10,25 @@ class UserViewModel {
         makeAutoObservable(this);
     }
 
-    async login(username, password) {
+    getApi() {
+        return axios.create({
+            baseURL: process.env.REACT_APP_API_AUTH,
+            headers: {
+                "Accept": "*/*",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            }
+        });
+    }
+
+    async login(email, password) {
         try {
-            const response = await axios.get('https://664d4854ede9a2b5565318dd.mockapi.io/login/users/1');
-            if (response.data.username === username && response.data.password === password) {
+            const response = await this.getApi().post("/auth", {
+                email,
+                password
+            });
+            console.log(response);
+            if (response.data.access_token) {
                 this.user = response.data;
                 this.isAuthenticated = true;
             } else {
@@ -23,13 +39,14 @@ class UserViewModel {
         }
     }
 
-    async register(username, email, password) {
+    async register(fullname, email, password) {
         try {
-            const response = await axios.post('https://664d4854ede9a2b5565318dd.mockapi.io/login/users', {
-                username,
+            const response = await this.getApi().post("/signup", {
+                fullname,
                 email,
                 password
             });
+            console.log(response);
             this.user = response.data;
             this.isAuthenticated = true;
         } catch (error) {
