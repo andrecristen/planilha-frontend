@@ -11,9 +11,9 @@ const RegisterView = observer(() => {
     const [password, setPassword] = useState('');
 
     const handleRegister = async () => {
-        await userViewModel.register(username, email, password);
-        if (userViewModel.isAuthenticated) {
-            navigate('/upload');
+        const response = await userViewModel.register(username, email, password);
+        if (response) {
+            navigate('/login');
         }
     };
 

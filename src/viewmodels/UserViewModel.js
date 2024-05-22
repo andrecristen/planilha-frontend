@@ -29,6 +29,7 @@ class UserViewModel {
             });
             if (response.data.access_token) {
                 this.user = response.data;
+                this.user.email = email;
                 this.isAuthenticated = true;
             } else {
                 alert('Invalid credentials');
@@ -45,11 +46,11 @@ class UserViewModel {
                 email,
                 password
             });
-            console.log(response);
             this.user = response.data;
-            this.isAuthenticated = true;
+            return true;
         } catch (error) {
             console.error('Registration failed', error);
+            return false;
         }
     }
 

@@ -24,7 +24,7 @@ class SpreadsheetViewModel {
     async uploadSpreadsheet(name, content) {
         const formData = new FormData();
         formData.append("name", name);
-        formData.append("user", UserViewModel.user.email);
+        formData.append("user_email", UserViewModel.user.email);
         formData.append("file", new Blob([content], { type: "text/csv" }), name);
 
         try {
