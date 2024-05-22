@@ -3,9 +3,11 @@ import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 import spreadsheetViewModel from '../viewmodels/SpreadsheetViewModel';
 import SpreadsheetList from '../components/SpreadsheetList';
+import { useWebSocket } from '../contexts/WebSocketContext';
 
 const SpreadsheetListView = observer(() => {
 
+    const ws = useWebSocket();
     const navigate = useNavigate();
     const spreadsheets = spreadsheetViewModel.getSpreadsheets();
 
@@ -14,28 +16,8 @@ const SpreadsheetListView = observer(() => {
     };
 
     useEffect(() => {
-        const ws = new WebSocket(process.env.REACT_APP_WEB_SOCKET)
-
-        ws.onopen = () => {
-            console.log('WebSocket connection opened');
-        };
-
-        ws.onmessage = (event) => {
-            alert('Nova mensagem recebida: ' + event.data);
-        };
-
-        ws.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-
-        return () => {
-            ws.close();
-        };
-    }, []);
+        
+    }, [ws]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen mx-6">

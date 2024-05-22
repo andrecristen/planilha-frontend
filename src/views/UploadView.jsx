@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import spreadsheetViewModel from '../viewmodels/SpreadsheetViewModel';
 import { useNavigate } from 'react-router-dom';
+import { useWebSocket } from '../contexts/WebSocketContext';
 
 const UploadView = observer(() => {
+
+    const ws = useWebSocket();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ fileName: '', fileContent: '' });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        
+    }, [ws]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
