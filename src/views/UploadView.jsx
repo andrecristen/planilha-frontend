@@ -4,38 +4,62 @@ import spreadsheetViewModel from '../viewmodels/SpreadsheetViewModel';
 import { useNavigate } from 'react-router-dom';
 
 const UploadView = observer(() => {
-
     const navigate = useNavigate();
-    const [fileName, setFileName] = useState('');
-    const [fileContent, setFileContent] = useState('');
+    const [formData, setFormData] = useState({ fileName: '', fileContent: '' });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setFormData({ ...formData, fileContent: e.target.result });
+        };
+        if (file) {
+            reader.readAsText(file);
+        }
+    };
 
     const handleUpload = () => {
-        spreadsheetViewModel.uploadSpreadsheet(fileName, fileContent);
-        navigate("/spreadsheets");
+        const { fileName, fileContent } = formData;
+        if (!fileName || !fileContent) {
+            setError('Forneça o nome do arquivo e o conteúdo do arquivo.');
+            return;
+        }
+        setIsLoading(true);
+        spreadsheetViewModel.uploadSpreadsheet(fileName, fileContent).then(() => {
+            setIsLoading(false);
+            navigate("/spreadsheets");
+        }).catch((err) => {
+            setIsLoading(false);
+            setError('Falha ao fazer upload da planilha. Por favor, tente novamente.' + err.toString());
+        });
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-6 rounded shadow-md">
-                <h1 className="text-2xl mb-4">Adicionar Planilha</h1>
+                <h1 className="text-2xl mb-4">Importar Planilha</h1>
+                {error && <p className="text-red-500 mb-2">{error}</p>}
                 <input
                     type="text"
                     className="mb-2 p-2 border rounded w-full"
-                    placeholder="Nome"
-                    value={fileName}
-                    onChange={(e) => setFileName(e.target.value)}
+                    placeholder="Name"
+                    value={formData.fileName}
+                    onChange={(e) => setFormData({ ...formData, fileName: e.target.value })}
                 />
-                <textarea
+                <input
+                    type="file"
                     className="mb-2 p-2 border rounded w-full"
-                    placeholder="Conteúdo CSV"
-                    value={fileContent}
-                    onChange={(e) => setFileContent(e.target.value)}
+                    onChange={handleFileChange}
+                    accept=".csv"
                 />
                 <button
                     onClick={handleUpload}
-                    className="bg-blue-500 text-white p-2 rounded w-full"
+                    className={`bg-blue-500 text-white p-2 rounded w-full ${isLoading ? 'opacity-50' : ''}`}
+                    disabled={isLoading}
                 >
-                    Upload
+                    {isLoading ? 'Importando...' : 'Importar'}
                 </button>
             </div>
         </div>

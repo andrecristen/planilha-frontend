@@ -27,7 +27,6 @@ class UserViewModel {
                 email,
                 password
             });
-            console.log(response);
             if (response.data.access_token) {
                 this.user = response.data;
                 this.isAuthenticated = true;

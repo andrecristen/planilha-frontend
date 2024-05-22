@@ -39,14 +39,14 @@ const LoginView = observer(() => {
                 />
                 <button
                     onClick={handleLogin}
-                    className="bg-blue-500 text-white p-2 rounded w-full"
+                    className="bg-blue-600 text-white p-2 rounded w-full"
                 >
                     Login
                 </button>
                 <button
                     type='button'
                     onClick={handleRegister}
-                    className="bg-blue-500 text-white p-2 rounded w-full mt-2"
+                    className="bg-green-600 text-white p-2 rounded w-full mt-2"
                 >
                     Registrar-se
                 </button>
