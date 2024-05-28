@@ -24,11 +24,11 @@ class SpreadsheetViewModel {
     async uploadSpreadsheet(name, content) {
         const formData = new FormData();
         formData.append("name", name);
-        formData.append("user_email", UserViewModel.user.email);
+        formData.append("user_id", UserViewModel.user.email);
         formData.append("file", new Blob([content], { type: "text/csv" }), name);
 
         try {
-            const response = await this.getApi().post("/uploadfile/", formData);
+            const response = await this.getApi().post("api/v1/uploadfile/", formData);
             this.spreadsheets.push({ name, content, id: response.data.id });
         } catch (error) {
             console.error("Failed to upload spreadsheet:", error);
